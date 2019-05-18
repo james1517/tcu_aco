@@ -1,0 +1,16 @@
+body {
+	/*background-image: url("img/bg.png");*/
+}
+
+.path {
+	width: 800px;
+	height: 500px;
+	border: 1px solid #000000;
+	position: absolute;
+}
+
+.ant {
+	width: 800px;
+	height: 500px;
+	position: absolute;
+}
