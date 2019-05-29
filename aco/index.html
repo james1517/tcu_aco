@@ -3,18 +3,23 @@
 <head>
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="style.css">
+	<script src="visual.js"></script>
 
 	<title>ACO</title>
 	<!-- <link rel="icon" href="img/logo.jpg" type="image/jpg"> -->
 </head>
 
-<body >
-	<script src="visual.js"></script>
+<body onload="draw();">
+
 <!--<img src="bgimg_sample.jpg" width="1000" height="500" class="bkimg"> -->
 
 	<div class="inner">
+		<a onload="draw();">
+		<canvas id="canvas" width="1000" height="500" </canvas>
+		</a>
+
+
 		<div class="canvas-area">
-			<canvas id="bkimg" width="1000" height="500"></canvas>
 			<canvas id="path" width="1000" height="500"></canvas>
 	    <canvas id="ant" width="1000" height="500"></canvas>
 		</div>
