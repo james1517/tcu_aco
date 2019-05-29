@@ -1,16 +1,34 @@
 <!DOCTYPE html>
-<html lang="ja">
-
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>ありごりずむ</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="style.css">
+
+	<title>ACO</title>
+	<!-- <link rel="icon" href="img/logo.jpg" type="image/jpg"> -->
 </head>
-    
-<body>
-    
 
-<script type="text/javascript" src="./js/aco.js"></script>
+<body >
+	<script src="visual.js"></script>
+<!--
+	<img src="bgimg_sample.jpg" width="1000" height="500" class="bkimg"> -->
 
+	<div class="inner">
+		<div class="canvas-area">
+			<canvas id="bkimg" width="1000" height="500"></canvas>
+			<canvas id="path" width="1000" height="500"></canvas>
+	    <canvas id="ant" width="1000" height="500"></canvas>
+		</div>
+
+			<a href="#" onclick="location.reload();" class="btn-reset">RESET</a>
+
+	</div>
 </body>
-    
+
+<footer id="footer">
+    <script src="function.js"></script>
+
+
+</footer>
+
 </html>
