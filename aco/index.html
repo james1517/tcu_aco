@@ -11,7 +11,8 @@
 
 <body onload="draw();">
 
-<!--<img src="bgimg_sample.jpg" width="1000" height="500" class="bkimg"> -->
+<!--
+<img src="bgimg_sample.jpg" width="1000" height="500" class="bkimg"> -->
 
 	<div class="inner">
 		<a onload="draw();">
@@ -21,7 +22,9 @@
 
 		<div class="canvas-area">
 			<canvas id="path" width="1000" height="500"></canvas>
-	    <canvas id="ant" width="1000" height="500"></canvas>
+			<a onload="drawAnt();">
+	    	<canvas id="ant" width="1000" height="500"></canvas>
+			</a>
 		</div>
 
 			<a href="#" onclick="location.reload();" class="btn-reset">RESET</a>

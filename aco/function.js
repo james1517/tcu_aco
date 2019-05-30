@@ -30,14 +30,15 @@ function moveAnt(ant_num, node_num) {
 }
 
 function drawAnt() {
-	var a = document.getElementById("ant");
+  var a =document.querySelector('#ant');
 	var act = a.getContext("2d");
 
 	act.clearRect(0, 0, 1000, 500);
-	act.beginPath();
-	act.arc(ant[0].x, ant[0].y, 10, 0, 2 * Math.PI);
-	act.stroke();
-	act.closePath();
+	var actimg = new Image();
+	actimg.src="antR.png";
+	actimg.onload = function(){
+		act.drawImage(actimg, ant[0].x, ant[0].y, 20, 20);
+	}
 
 	moveAnt(0, 0);
 	// ant[0].x += (300 - 10) / 100;
