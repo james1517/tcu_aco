@@ -29,13 +29,29 @@ function moveAnt(ant_num, node_num) {
 	ant[ant_num].y += (node[node_num].y - ant[ant_num].last_pos_y) / node[node_num].length;
 }
 
+function chgimg(){
+
+		chgb = document.getElementById('#btn-chg');
+		chgb.addEventListener('click', chgimg, false);
+}
+
+
+
+
 function drawAnt() {
   var a =document.querySelector('#ant');
 	var act = a.getContext("2d");
-
-	act.clearRect(0, 0, 1000, 500);
 	var actimg = new Image();
 	actimg.src="antR.png";
+	var actimg2 = new Image();
+	actimg2.src ="antR2.png";
+
+	act.clearRect(0, 0, 1000, 500);
+	// 
+	// actimg2.onload = function(){
+	// 	act.drawImage(actimg2, ant[0].x-10, ant[0].y-10, 20, 20);
+	// }
+
 	actimg.onload = function(){
 		act.drawImage(actimg, ant[0].x, ant[0].y, 20, 20);
 	}
