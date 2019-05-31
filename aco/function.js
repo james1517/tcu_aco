@@ -28,12 +28,13 @@ function moveAnt(ant_num, node_num) {
 	ant[ant_num].x += (node[node_num].x - ant[ant_num].last_pos_x) / node[node_num].length;
 	ant[ant_num].y += (node[node_num].y - ant[ant_num].last_pos_y) / node[node_num].length;
 }
-
-function chgimg(){
-
-		chgb = document.getElementById('#btn-chg');
-		chgb.addEventListener('click', chgimg, false);
-}
+//
+// function chgimg(){
+// 		var chgb = document.getElementById('#btn-chg');
+// 		chgb.addEventListener('click', function(){
+//
+// 		}
+// }
 
 
 
@@ -47,10 +48,10 @@ function drawAnt() {
 	actimg2.src ="antR2.png";
 
 	act.clearRect(0, 0, 1000, 500);
-	// 
-	// actimg2.onload = function(){
-	// 	act.drawImage(actimg2, ant[0].x-10, ant[0].y-10, 20, 20);
-	// }
+
+	 // actimg2.onload = function(){
+	 // 	act.drawImage(actimg2, ant[0].x-10, ant[0].y-10, 20, 20);
+	 // }
 
 	actimg.onload = function(){
 		act.drawImage(actimg, ant[0].x, ant[0].y, 20, 20);

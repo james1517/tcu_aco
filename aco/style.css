@@ -39,6 +39,8 @@ body {
 #btn-chg{
 	width: 90px;
 	height: 90px;
+	text-align: center;
+	line-height: 158px;
 	margin: 0px 25px 0px 440px;
 	display: inline-block;
   background: #795548;
@@ -89,15 +91,14 @@ body {
   border-bottom: none;
 }
 
-/* まだ何の機能もついていないボタン */
-.btn-A {
+/* 赤い蟻に変える */
+.btn-chg2 {
 	width: 90px;
 	height: 90px;
 	text-align: center;
-	line-height: 90px;
+	line-height: 158px;
 	margin: 0px 25px 0px 5px;
   display: inline-block;
-  text-decoration: none;
   background: #795548;/*ボタン色*/
   color: white;
   border-bottom: solid 4px #63463b;
@@ -106,11 +107,11 @@ body {
 	overflow: hidden;
 }
 
-.btn-A:hover{
+.btn-chg2:hover{
 	opacity: 0.6;
 }
 
-.btn-A:active {
+.btn-chg2:active {
   /*ボタンを押したとき*/
 	width: 90px;
 	height: 90px;
