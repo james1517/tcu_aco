@@ -1,10 +1,13 @@
+const WIDTH = 800;
+const HEIGTH = 500;
 const NODE_NUMBER = 3; //ノードの数
 const AXIS = 4; //軸の数
 const START_NODE_X = 50; //アリの巣のx座標
-const START_NODE_Y = Math.floor(Math.random() * 1000) + 100; //アリの巣のy座標
-const RANDOM_MIN_Y = 80; //y座標のランダム下限範囲
-const RANDOM_MAX_Y = 250; //y座標のランダム上限範囲
-const GOAL_Y = Math.floor(Math.random() * 1000); //エサのy座標
+const START_NODE_Y = Math.floor((Math.random() * (HEIGTH - 20)) + 20); //アリの巣のy座標
+const RANDOM_MIN_Y = 10; //y座標のランダム下限範囲
+const RANDOM_MAX_Y = 100; //y座標のランダム上限範囲
+const GOAL_Y = Math.floor((Math.random() * (HEIGTH - 20)) + 20); //エサのy座標
+const BIFURCATION_PLUS = (WIDTH - 100) / (AXIS + 1);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //アリの情報
@@ -30,6 +33,7 @@ var node = [
 //各エッジの座標の保持,フェロモン情報
 let edge = [];
 //////////////////////////////////////////////////////////////////////////////////////////////////
+let deb = 0;
 
 //座標の決定
 route_y = new Array(AXIS);
@@ -38,25 +42,29 @@ for (let y = 0; y < AXIS; y++) {
 
     //ランダムで座標の決定
     for (let z = 0; z < NODE_NUMBER; z++) {
+        deb = 0;
         if (z == 0) {
             route_y[y][z] = Math.floor(Math.random() * (RANDOM_MAX_Y - RANDOM_MIN_Y)) + RANDOM_MIN_Y;
             
             //間隔を空けるためのランダムリセット
             if (route_y[y][z] - START_NODE_Y < 50) {
                 route_y[y][z] += 100;
+                deb++;
             }
         } else {
             route_y[y][z] = Math.floor(Math.random() * (RANDOM_MAX_Y - RANDOM_MIN_Y)) + route_y[y][z - 1] + 50;
             
             //間隔を空けるためのランダムリセット
-            if (route_y[y][z] - route_y[y][z - 1] < 150) {
+            /*if (route_y[y][z] - route_y[y][z - 1] < 50) {
                 z--;
-            }
+                deb++;
+                console.log("でばｋｋｋｋｋｋっく");
+            }*/
         }
 
         //座標デバッグ
         console.log("軸：" + y + "　,上から" + z);
-        console.log(route_y[y][z]);
+        console.log("debは "+deb+" y座標:"+route_y[y][z]);
     }
 }
 
@@ -79,7 +87,7 @@ function drawPath(x1, y1, x2, y2) {
     pct.stroke(); //経路の形の指定，描画
 }
 
-let bifurcation = 200; //分岐の軸のx座標
+let bifurcation = BIFURCATION_PLUS; //分岐の軸のx座標
 let length = 0; //経路の長さ
 
 //開始地点からの経路の描画
@@ -107,14 +115,14 @@ let random_point = 0; //ランダムの判断値
 for (let y = 0; y < AXIS - 1; y++) { //軸の分だけ回す
     random_point = Math.floor(Math.random() * NODE_NUMBER);
     for (let z = 0; z < NODE_NUMBER; z++) { //座標の分だけ回す        
-        drawPath(bifurcation, route_y[y][z], bifurcation + 200, route_y[y + 1][z]);
+        drawPath(bifurcation, route_y[y][z], bifurcation +  BIFURCATION_PLUS, route_y[y + 1][z]);
 
-        length = calculationPath(bifurcation, route_y[y][z], bifurcation + 200, route_y[y + 1][z]);
+        length = calculationPath(bifurcation, route_y[y][z], bifurcation +  BIFURCATION_PLUS, route_y[y + 1][z]);
         //エッジの保持
         edge.push({
             last_pos_x: bifurcation,
             last_pos_y: route_y[y][z],
-            x: bifurcation + 200,
+            x: bifurcation +  BIFURCATION_PLUS,
             y: route_y[y + 1][z],
             length: length,
             pheromon: 1
@@ -123,28 +131,28 @@ for (let y = 0; y < AXIS - 1; y++) { //軸の分だけ回す
         //分岐の生成
         if (random_point == z) {
             if (random_point == 0) {
-                drawPath(bifurcation, route_y[y][z], bifurcation + 200, route_y[y + 1][z + 1]);
+                drawPath(bifurcation, route_y[y][z], bifurcation +  BIFURCATION_PLUS, route_y[y + 1][z + 1]);
 
-                length = calculationPath(bifurcation, route_y[y][z], bifurcation + 200, route_y[y + 1][z + 1]);
+                length = calculationPath(bifurcation, route_y[y][z], bifurcation +  BIFURCATION_PLUS, route_y[y + 1][z + 1]);
                 //エッジの保持
                 edge.push({
                     last_pos_x: bifurcation,
                     last_pos_y: route_y[y][z],
-                    x: bifurcation + 200,
+                    x: bifurcation +  BIFURCATION_PLUS,
                     y: route_y[y + 1][z + 1],
                     length: length,
                     pheromon: 1
                 });
 
             } else {
-                drawPath(bifurcation, route_y[y][z], bifurcation + 200, route_y[y + 1][z - 1]);
+                drawPath(bifurcation, route_y[y][z], bifurcation +  BIFURCATION_PLUS, route_y[y + 1][z - 1]);
 
-                length = calculationPath(bifurcation, route_y[y][z], bifurcation + 200, route_y[y + 1][z - 1]);
+                length = calculationPath(bifurcation, route_y[y][z], bifurcation +  BIFURCATION_PLUS, route_y[y + 1][z - 1]);
                 //エッジの保持
                 edge.push({
                     last_pos_x: bifurcation,
                     last_pos_y: route_y[y][z],
-                    x: bifurcation + 200,
+                    x: bifurcation +  BIFURCATION_PLUS,
                     y: route_y[y + 1][z - 1],
                     length: length,
                     pheromon: 1
@@ -152,19 +160,19 @@ for (let y = 0; y < AXIS - 1; y++) { //軸の分だけ回す
             }
         }
     }
-    bifurcation += 200;
+    bifurcation += BIFURCATION_PLUS;
 }
 
 //経路からゴールへの描画
 for (let z = 0; z < NODE_NUMBER; z++) {
-    drawPath(bifurcation, route_y[AXIS - 1][z], bifurcation + 200, GOAL_Y);
+    drawPath(bifurcation, route_y[AXIS - 1][z], bifurcation +  BIFURCATION_PLUS, GOAL_Y);
     
-    length = calculationPath(bifurcation, route_y[AXIS - 1][z], bifurcation + 200, GOAL_Y);
+    length = calculationPath(bifurcation, route_y[AXIS - 1][z], bifurcation +  BIFURCATION_PLUS, GOAL_Y);
     //エッジの保持
     edge.push({
         last_pos_x: bifurcation,
         last_pos_y: route_y[AXIS - 1][z],
-        x: bifurcation + 200,
+        x: bifurcation +  BIFURCATION_PLUS,
         y: GOAL_Y,
         length: length,
         pheromon: 1
