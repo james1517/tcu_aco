@@ -3,14 +3,14 @@ body {
 }
 
 #path {
-	width: 1200px;
+	width: 800px;
 	height: 500px;
 	border: 1px solid #000000;
 	position: absolute;
 }
 
 #ant {
-	width: 1200px;
+	width: 800px;
 	height: 500px;
 	position: absolute;
 }
@@ -18,6 +18,6 @@ body {
 #windows {
 	position: relative;
 	margin: 0 auto;
-	width: 1200px;
+	width: 800px;
 	height: 500px;
 }
