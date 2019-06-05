@@ -189,7 +189,14 @@ function drawAnt() {
 	        }
 	    }
 
-	    if (ant[0].x >= GOAL_X) {
+		let end_of_circle = true;
+		for (let i = 0; i < ANT_NUMBER; i++) {
+			if (ant[i].x < GOAL_X) {
+				end_of_circle = false;
+				break;
+			}
+		}
+	    if (end_of_circle == true) {
 	        //初期化
 	        //for(let i = 0; i < ANT_NUMBER; i++){
 	        for (let i = 0; i < ANT_NUMBER; i++) {
