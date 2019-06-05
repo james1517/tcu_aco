@@ -40,18 +40,22 @@ function moveAnt(ant_num, node_num) {
 
 
 function drawAnt() {
+	var actimg = new Image();
+　var actimg_src = new Array("antR.png", "antR2.png");
+	var btn_chg = document.getElementById('btn-chg');
+	var btn_chg2 = document.getElementById('btn-chg2');
   var a =document.querySelector('#ant');
 	var act = a.getContext("2d");
-	var actimg = new Image();
-	actimg.src="antR.png";
-	var actimg2 = new Image();
-	actimg2.src ="antR2.png";
+
+	actimg.src = actimg_src[ 0 ];
+
+	// btn_chg.addEventListener('click',function(){
+	// 	x=0;
+	// });
+	// btn_chg2.addEventListener('click',function(){
+	// 	x=1;);
 
 	act.clearRect(0, 0, 1000, 500);
-
-	 // actimg2.onload = function(){
-	 // 	act.drawImage(actimg2, ant[0].x-10, ant[0].y-10, 20, 20);
-	 // }
 
 	actimg.onload = function(){
 		act.drawImage(actimg, ant[0].x, ant[0].y, 20, 20);
@@ -60,7 +64,6 @@ function drawAnt() {
 	moveAnt(0, 0);
 	// ant[0].x += (300 - 10) / 100;
 	// ant[0].y += (100 - 10) / 100;
-
 }
 
 setInterval(drawAnt, 10);
