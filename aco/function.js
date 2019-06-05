@@ -16,14 +16,17 @@ const EVA_R = 0.05;//フェロモンの蒸発率
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //アリの情報
-var ant = [
-    {
-        x: START_NODE_X,
-        y: START_NODE_Y,
-        path: [],
-        total_dis: 0
-	}
-];
+var ant = [];
+for (let i = 0; i < ANT_NUMBER; i++) {
+	ant.push(
+		{
+			x: START_NODE_X,
+	        y: START_NODE_Y,
+			path: [],
+            total_dis: 0
+		}
+	);
+}
 
 //各エッジの座標の保持,フェロモン情報
 var edge = [];
@@ -105,7 +108,6 @@ for (let y = 0; y < AXIS - 1; y++) { //軸の分だけ回す
         });
 
         //分岐の生成
-        // if (random_point == z) {
         if (random_point != z) {
             drawPath(route_x, route_y[y][z], route_x + bifurcation, route_y[y + 1][random_point]);
 
@@ -119,10 +121,7 @@ for (let y = 0; y < AXIS - 1; y++) { //軸の分だけ回す
                 length: length,
                 pheromon: 1
             });
-
         }
-        // }
-
     }
     route_x += bifurcation;
 }
@@ -154,27 +153,33 @@ function moveAnt(ant_num, edge_num) {
 
 }
 
-var edge_num = 0;
+var edge_num = [ANT_NUMBER];
+
+for (var i = 0; i < ANT_NUMBER; i++) {
+    edge_num[i] = StartChoicePath(i);
+}
+
+var img = new Array();
+for (var i = 0; i < ANT_NUMBER; i++) {
+    img[i] = new Image();
+    img[i].src = "ant.png";
+}
+
 function drawAnt() {
     var a = document.getElementById("ant");
     var act = a.getContext("2d");
 
+    act.clearRect(0, 0, 800, 500);
+    for (let i = 0; i < ANT_NUMBER; i++) {
+        act.drawImage(img[i], 0, 0, 400, 300, ant[i].x - 25, ant[i].y - 15, 50, 30);
 
-	act.clearRect(0, 0, 800, 500);
-	act.beginPath();
-	act.arc(ant[0].x, ant[0].y, 10, 0, 2 * Math.PI);
-	act.stroke();
-	act.closePath();
-
-
-	if (ant[0].x < edge[edge_num].x) {
-		moveAnt(0, edge_num);
-	}
-	else {
-        edge_num = choicePath(edge_num);
-        console.log(edge_num);
-
-	}
+        if (ant[i].x < edge[edge_num[i]].x) {
+            moveAnt(i, edge_num[i]);
+        }
+        else {
+            edge_num[i] = choicePath(edge_num[i]);
+        }
+    }
 }
 
 setInterval(drawAnt, 10);
@@ -202,12 +207,15 @@ function rouletteChoice(choice_edge) {
     }
 
     //ソート
-    if (choice_edge[0].pheromon < choice_edge[1].pheromon) {
-        let swap;
-        swap = choice_edge[0].pheromon;
-        choice_edge[0].pheromon = choice_edge[1].pheromon;
-        choice_edge[1].pheromon = swap;
-    }
+    for (let i = 0; i < choice_edge.length; i++) {
+       for (let j = choice_edge.length - 1; j > i; j--) {
+           if (choice_edge[j].pheromon < choice_edge[j - 1].pheromon) {
+               let swap = choice_edge[j].pheromon;
+               choice_edge[j].pheromon = choice_edge[j - 1].pheromon;
+               choice_edge[j - 1].pheromon = swap;
+           }
+       }
+   }
 
     //ルーレット選択
     let rank;
@@ -232,15 +240,39 @@ function choicePath(edge_num) {
 
     //蟻が通れる経路を探す
     for (let i = edge_num + 1; i < edge.length; i++) {
-        //x座標，y座標が合致するエッジを探す
-        if (nextEdge(edge[edge_num], edge[i]) == true) {
-                choice_edge.push({
-                    pheromon: edge[i].pheromon,
-                    edge_num: i
-                });
-            }
-        }
-        console.log(choice_edge);
+       //x座標，y座標が合致するエッジを探す
+       if (nextEdge(edge[edge_num], edge[i]) == true) {
+           choice_edge.push({
+               pheromon: edge[i].pheromon,
+               edge_num: i
+           });
+       }
+   }
+
+    //複数ある場合
+    if (choice_edge.length > 1) {
+        path_num = rouletteChoice(choice_edge);
+    } else {
+        path_num = choice_edge[0].edge_num;
+    }
+
+    return path_num;
+}
+
+function StartChoicePath(ant_num) {
+    let path_num //選択する経路の添え字
+    let choice_edge = []; //選択できる経路の保持
+
+    //蟻が通れる経路を探す
+    for (let i = 0; i < edge.length; i++) {
+       //x座標，y座標が合致するエッジを探す
+       if (nextEdge(ant[ant_num], edge[i]) == true) {
+           choice_edge.push({
+               pheromon: edge[i].pheromon,
+               edge_num: i
+           });
+       }
+   }
 
     //複数ある場合
     if (choice_edge.length > 1) {
@@ -254,7 +286,7 @@ function choicePath(edge_num) {
 
 
 //フェロモンの分泌
-function putPheromone(ant_num) {
+function putpheromon(ant_num) {
     let i;
     let p = PHERO_Q / ant[ant_num].total_dis;
 
@@ -264,7 +296,7 @@ function putPheromone(ant_num) {
 }
 
 //フェロモン量の更新
-function renewPheromone(){
+function renewpheromon(){
     //フェロモン蒸発
     for(let i = 0; i < edge.length; i++){
         edge[i].pheromon *= 1 - EVA_R;
@@ -272,6 +304,6 @@ function renewPheromone(){
 
     //フェロモン加算
     for(let j = 0; j < ANT_NUMBER; j++){
-        putPheromone(j);
+        putpheromon(j);
     }
 }
