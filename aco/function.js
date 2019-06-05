@@ -9,9 +9,9 @@ const RANDOM_MIN_Y = 30; //y座標のランダム下限範囲
 const RANDOM_MAX_Y = HEIGHT - 120; //y座標のランダム上限範囲
 const GOAL_Y = Math.floor(Math.random() * HEIGHT); //エサのy座標
 const GOAL_X = WIDTH - 30;
-// const RAND_01 = Math.random(); //ルーレット選択に使用する
+const RAND_01 = Math.random(); //ルーレット選択に使用する
 const PHERO_Q = 10; //アリの一回の分泌量
-const EVA_R = 0.05;//フェロモンの蒸発率
+const EVA_R = 0.1;//フェロモンの蒸発率
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -251,13 +251,16 @@ function rouletteChoice(choice_edge) {
     //ルーレット選択
     let rank;
     let prob;
-    let r =  Math.random();
+    let r = Math.random();
 
     for (rank = 1; rank < choice_edge.length; rank++) {
         prob = choice_edge[rank - 1].pheromone / denom;
         if (r <= prob) {
             break;
         }
+        /*if(RAND_01 > prob){
+                
+        }*/
         r -= prob;
     }
 
