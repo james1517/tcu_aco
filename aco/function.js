@@ -9,7 +9,7 @@ const RANDOM_MIN_Y = 30; //y座標のランダム下限範囲
 const RANDOM_MAX_Y = HEIGHT - 120; //y座標のランダム上限範囲
 const GOAL_Y = Math.floor(Math.random() * HEIGHT); //エサのy座標
 const GOAL_X = WIDTH - 30;
-const RAND_01 = Math.random(); //ルーレット選択に使用する
+// const RAND_01 = Math.random(); //ルーレット選択に使用する
 const PHERO_Q = 10; //アリの一回の分泌量
 const EVA_R = 0.05;//フェロモンの蒸発率
 
@@ -153,10 +153,10 @@ function moveAnt(ant_num, edge_num) {
 
 }
 
-var edge_num = [ANT_NUMBER];
+var now_edge_num = [ANT_NUMBER];
 
 for (var i = 0; i < ANT_NUMBER; i++) {
-    edge_num[i] = StartChoicePath(i);
+    now_edge_num[i] = StartChoicePath(i);
 }
 
 var img = new Array();
@@ -166,49 +166,47 @@ for (var i = 0; i < ANT_NUMBER; i++) {
 }
 
 function drawAnt() {
-    var a = document.getElementById("ant");
-    var act = a.getContext("2d");
+	var a = ["ant0", "ant1", "ant2", "ant3", "ant4", "ant5", "ant6", "ant7", "ant8", "ant9"];
+	var act = new Array();
+	var b = new Array();
 
-    act.clearRect(0, 0, 800, 500);
-    for (let i = 0; i < ANT_NUMBER; i++) {
-        act.drawImage(img[i], 0, 0, 400, 300, ant[i].x - 25, ant[i].y - 15, 50, 30);
+	for (let j = 0; j < ANT_NUMBER; j++) {
+		b[j] = document.getElementById(a[j]);
+		act[j] = b[j].getContext("2d");
 
-        if (ant[i].x < edge[edge_num[i]].x) {
-            moveAnt(i, edge_num[i]);
-        }
-        else if (ant[i].x >= GOAL_X) {
+		act[j].clearRect(0, 0, 800, 500);
+	    for (let i = 0; i < ANT_NUMBER; i++) {
+	        act[j].drawImage(img[i], 0, 0, 400, 300, ant[i].x - 25, ant[i].y - 15, 50, 30);
 
-        }
-        else {
-            edge_num[i] = choicePath(edge_num[i]);
-        }
-    }
+	        if (ant[i].x < edge[now_edge_num[i]].x) {
+	            moveAnt(i, now_edge_num[i]);
+	        }
+	        else if (ant[i].x >= GOAL_X) {
 
-    if (ant[0].x >= GOAL_X) {
-        //初期化
-        //for(let i = 0; i < ANT_NUMBER; i++){
-        for (let i = 0; i < 1; i++) {
-            ant[i].x = START_NODE_X;
-            ant[i].y = START_NODE_Y;
-            ant[i].total_dis = 0;
+	        }
+	        else {
+	            now_edge_num[i] = choicePath(now_edge_num[i]);
+	        }
+	    }
 
-            let path_len = ant[i].path.length;
+	    if (ant[0].x >= GOAL_X) {
+	        //初期化
+	        //for(let i = 0; i < ANT_NUMBER; i++){
+	        for (let i = 0; i < ANT_NUMBER; i++) {
+	            ant[i].x = START_NODE_X;
+	            ant[i].y = START_NODE_Y;
+	            ant[i].total_dis = 0;
+	        }
 
-            for (let j = 0; j < path_len; j++) {
-                ant[i].path[0].pop;
-            }
-        }
-        for (let i = 0; i < edge.length; i++) {
-            edge[i].pheromone = 1;
-        }
+	        for (var i = 0; i < ANT_NUMBER; i++) {
+	            now_edge_num[i] = StartChoicePath(i);
+	        }
+	    }
+	}
 
-        for (var i = 0; i < ANT_NUMBER; i++) {
-            edge_num[i] = StartChoicePath(i);
-        }
-    }
 }
 
-setInterval(drawAnt, 10);
+setInterval(drawAnt, 50);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -246,7 +244,7 @@ function rouletteChoice(choice_edge) {
     //ルーレット選択
     let rank;
     let prob;
-    let r = RAND_01;
+    let r =  Math.random();
 
     for (rank = 1; rank < choice_edge.length; rank++) {
         prob = choice_edge[rank - 1].pheromone / denom;
