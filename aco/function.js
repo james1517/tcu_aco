@@ -127,7 +127,51 @@ function drawPath(x1, y1, x2, y2) {
 
     pct.moveTo(x1, y1); //始点設定
     pct.lineTo(x2, y2); //終点設定
+	pct.strokeStyle = "black";
     pct.stroke(); //経路の形の指定，描画
+}
+
+function drawMainPath(x1, y1, x2, y2) {
+
+    pct.moveTo(x1, y1); //始点設定
+    pct.lineTo(x2, y2); //終点設定
+	pct.strokeStyle = "red";
+    pct.stroke(); //経路の形の指定，描画
+}
+
+var MainPath = [];
+function ShowMainPath() {
+	let CheckNode = {
+		x: START_NODE_X,
+		y: START_NODE_Y
+	};
+
+	MainPath = [];
+
+	while (CheckNode.x < GOAL_X) {
+		let CheckPheromoneEdge = [];
+
+		for (let i = 0; i < edge.length; i++) {
+			if (nextEdge(CheckNode, edge[i]) == true) {
+				CheckPheromoneEdge.push(edge[i]);
+			}
+		}
+
+		let max = 0;
+		let StrongEdge;
+		for (let i = 0; i < CheckPheromoneEdge.length; i++) {
+			if (CheckPheromoneEdge[i].pheromone > max) {
+				max = CheckPheromoneEdge[i].pheromone;
+				StrongEdge = CheckPheromoneEdge[i];
+			}
+		}
+		drawMainPath(StrongEdge.last_pos_x, StrongEdge.last_pos_y, StrongEdge.x, StrongEdge.y);
+		MainPath.push(StrongEdge);
+
+		CheckNode.x = StrongEdge.x;
+		CheckNode.y = StrongEdge.y;
+	}
+
 }
 
 var bifurcation = Math.floor((WIDTH - 2 * 30) / (AXIS + 1)); //分岐の軸のx座標
@@ -225,6 +269,7 @@ var now_edge_num = [ANT_NUMBER];
 
 for (var i = 0; i < ANT_NUMBER; i++) {
     now_edge_num[i] = StartChoicePath(i);
+	ant[i].path.push(now_edge_num[i]);
 }
 
 var img = new Array();
@@ -237,8 +282,6 @@ for (var i = 0; i < ANT_NUMBER; i++) {
 
 
 function drawAnt() {
-
-
 	for (let j = 0; j < ANT_NUMBER; j++) {
 		act[j] = document.getElementById(a[j]).getContext("2d");
 
@@ -254,6 +297,7 @@ function drawAnt() {
 	        }
 	        else {
 	            now_edge_num[i] = choicePath(now_edge_num[i]);
+				ant[i].path.push(now_edge_num[i]);
 	        }
 	    }
 
@@ -265,6 +309,7 @@ function drawAnt() {
 			}
 		}
 	    if (end_of_circle == true) {
+			renewpheromone();
 	        //初期化
 	        for (let i = 0; i < ANT_NUMBER; i++) {
 	            ant[i].x = START_NODE_X;
@@ -273,6 +318,7 @@ function drawAnt() {
 				ant[i].path = [];
 
 				now_edge_num[i] = StartChoicePath(i);
+				ant[i].path.push(now_edge_num[i]);
 	        }
 	    }
 	}
