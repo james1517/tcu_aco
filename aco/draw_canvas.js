@@ -98,12 +98,12 @@ for (let y = 0; y < AXIS; y++) {
 function drawMap() {
     // 巣の描画
     start_img.onload = function() {
-    	pct.drawImage(start_img, 0, 0, 300, 600, START_NODE_X - 40, START_NODE_Y - 50, 60, 100);
+    	pct.drawImage(start_img, 0, 0, 350, 600, START_NODE_X - 30, START_NODE_Y - 50, 60, 100);
     }
 
     // エサの描画
     goal_img.onload = function() {
-    	pct.drawImage(goal_img, 0, 0, 450, 450, GOAL_X - 30, GOAL_Y - 30, 60, 60);
+    	pct.drawImage(goal_img, 0, 0, 450, 450, GOAL_X - 35, GOAL_Y - 30, 60, 60);
     }
 
 	//開始地点からの経路の描画
