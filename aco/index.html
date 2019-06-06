@@ -1,16 +1,61 @@
 <!DOCTYPE html>
-<html lang="ja">
-
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>ありごりずむ</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="style.css">
+	<title>大谷研究室 アリゴリズム可視化</title>
+	<link rel="icon" href="https://www.comm.tcu.ac.jp/otani-lab/favicon.ico">
 </head>
-    
+
 <body>
-    
+	<div class="setting">
+		<p class="text">アリの数</p>
+		<p id="AntNumberText" class="space"></p>
+		<!-- 速度バー　スタイル設定のため仮置き -->
+		<input id="AntNumber" type="range" class="slider" min="1" max="20" value="10">
 
-<script type="text/javascript" src="./js/aco.js"></script>
+		<p></p>
 
+		<p class="text">経路の難易度</p>
+		<p id="NodeNumberText" class="space"></p>
+		<input id="NodeNumber" type="range" class="slider" min="1" max="6" value="3">
+	</div>
+
+	<div id="windows">
+		<canvas id="path" width="800" height="500"></canvas>
+	    <canvas id="ant0" class="ant" width="800" height="500"></canvas>
+		<canvas id="ant1" class="ant" width="800" height="500"></canvas>
+		<canvas id="ant2" class="ant" width="800" height="500"></canvas>
+		<canvas id="ant3" class="ant" width="800" height="500"></canvas>
+		<canvas id="ant4" class="ant" width="800" height="500"></canvas>
+		<canvas id="ant5" class="ant" width="800" height="500"></canvas>
+		<canvas id="ant6" class="ant" width="800" height="500"></canvas>
+		<canvas id="ant7" class="ant" width="800" height="500"></canvas>
+		<canvas id="ant8" class="ant" width="800" height="500"></canvas>
+		<canvas id="ant9" class="ant" width="800" height="500"></canvas>
+		<canvas id="ant10" class="ant" width="800" height="500"></canvas>
+		<canvas id="ant11" class="ant" width="800" height="500"></canvas>
+		<canvas id="ant12" class="ant" width="800" height="500"></canvas>
+		<canvas id="ant13" class="ant" width="800" height="500"></canvas>
+		<canvas id="ant14" class="ant" width="800" height="500"></canvas>
+		<canvas id="ant15" class="ant" width="800" height="500"></canvas>
+		<canvas id="ant16" class="ant" width="800" height="500"></canvas>
+		<canvas id="ant17" class="ant" width="800" height="500"></canvas>
+		<canvas id="ant18" class="ant" width="800" height="500"></canvas>
+		<canvas id="ant19" class="ant" width="800" height="500"></canvas>
+	</div>
+
+	<div class="button">
+		<!-- リセットボタン -->
+		<p><a href="#" onclick="reset()" class="btn">経路再生成</a></p>
+
+		<!-- 背景を変えるボタン -->
+		<p><a href="#" onclick="change_bg()" class="btn">背景変更</a></p>
+	</div>
+
+	<script src="function.js"></script>
+	<footer>
+	</footer>
 </body>
-    
+
 </html>
