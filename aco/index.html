@@ -8,19 +8,33 @@
 </head>
 
 <body>
-	<div id="windows">
-		<canvas id="path" width="800" height="500"></canvas>
-	    <canvas id="ant0" class="ant" width="800" height="500"></canvas>
-		<canvas id="ant1" class="ant" width="800" height="500"></canvas>
-		<canvas id="ant2" class="ant" width="800" height="500"></canvas>
-		<canvas id="ant3" class="ant" width="800" height="500"></canvas>
-		<canvas id="ant4" class="ant" width="800" height="500"></canvas>
-		<canvas id="ant5" class="ant" width="800" height="500"></canvas>
-		<canvas id="ant6" class="ant" width="800" height="500"></canvas>
-		<canvas id="ant7" class="ant" width="800" height="500"></canvas>
-		<canvas id="ant8" class="ant" width="800" height="500"></canvas>
-		<canvas id="ant9" class="ant" width="800" height="500"></canvas>
+	<div class="windows">
+    <div class="canvas-area">
+	    <img src="bkimg.jpg" width="800" height="500" class="bkimg">
+      <canvas id="path" width="800" height="500"></canvas>
+      <canvas id="ant0" class="ant" width="800" height="500"></canvas>
+      <canvas id="ant1" class="ant" width="800" height="500"></canvas>
+      <canvas id="ant2" class="ant" width="800" height="500"></canvas>
+      <canvas id="ant3" class="ant" width="800" height="500"></canvas>
+      <canvas id="ant4" class="ant" width="800" height="500"></canvas>
+      <canvas id="ant5" class="ant" width="800" height="500"></canvas>
+      <canvas id="ant6" class="ant" width="800" height="500"></canvas>
+      <canvas id="ant7" class="ant" width="800" height="500"></canvas>
+      <canvas id="ant8" class="ant" width="800" height="500"></canvas>
+      <canvas id="ant9" class="ant" width="800" height="500"></canvas>
+	  </div>
+	<div class="mmm">
+		<p class="text"> アリの数</p>
+		<p class="space"></p>
+		<p class="text">フェロモン</p>
+		<p class="space"></p>
 	</div>
+	<!-- 速度バー　スタイル設定のため仮置き -->
+	<input type="range" class="slider" min="0" max="200" value="100" data-unit="%">
+	<!-- リセットボタン -->
+	<a href="#" onclick="location.reload();" class="btn-reset">RESET</a>
+  </div>
+
 
 	<script src="function.js"></script>
 	<footer>
