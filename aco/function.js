@@ -121,85 +121,94 @@ function calculatePath(x1, y1, x2, y2) {
 
     return length;
 }
+var start_img = new Image();
+start_img.src = "img/ant0.png";
+pct.drawImage(start_img, 0, 0, 400, 500, START_NODE_X, START_NODE_Y, 100, 60);
+
+var goal_img = new Image();
+goal_img.src = "img/goal.png";
+pct.drawImage(goal_img, 0, 0, 600, 400, GOAL_X - 50, GOAL_Y - 30, 100, 60);
+
 
 //経路の描画
 function drawPath(x1, y1, x2, y2) {
 
     pct.moveTo(x1, y1); //始点設定
     pct.lineTo(x2, y2); //終点設定
-	pct.strokeStyle = "black";
+	pct.lineWidth = 3;
+	pct.strokeStyle = "blue";
     pct.stroke(); //経路の形の指定，描画
 }
 
-function drawMainPath(x1, y1, x2, y2) {
+// function drawMainPath(x1, y1, x2, y2) {
+//
+//     pct.moveTo(x1, y1); //始点設定
+//     pct.lineTo(x2, y2); //終点設定
+// 	pct.strokeStyle = "red";
+//     pct.stroke(); //経路の形の指定，描画
+// }
 
-    pct.moveTo(x1, y1); //始点設定
-    pct.lineTo(x2, y2); //終点設定
-	pct.strokeStyle = "red";
-    pct.stroke(); //経路の形の指定，描画
-}
-
-var MainPath = [];
-function ShowMainPath() {
-	let CheckNode = {
-		x: START_NODE_X,
-		y: START_NODE_Y
-	};
-
-	MainPath = [];
-
-	while (CheckNode.x < GOAL_X) {
-		let CheckPheromoneEdge = [];
-
-		for (let i = 0; i < edge.length; i++) {
-			if (nextEdge(CheckNode, edge[i]) == true) {
-				CheckPheromoneEdge.push(edge[i]);
-			}
-		}
-
-		let max = 0;
-		let StrongEdge;
-		for (let i = 0; i < CheckPheromoneEdge.length; i++) {
-			if (CheckPheromoneEdge[i].pheromone > max) {
-				max = CheckPheromoneEdge[i].pheromone;
-				StrongEdge = CheckPheromoneEdge[i];
-			}
-		}
-		drawMainPath(StrongEdge.last_pos_x, StrongEdge.last_pos_y, StrongEdge.x, StrongEdge.y);
-		MainPath.push(StrongEdge);
-
-		CheckNode.x = StrongEdge.x;
-		CheckNode.y = StrongEdge.y;
-	}
-
-}
+//巣からエサまでの一番フェロモンの多い経路の検出
+// var MainPath = [];
+// function ShowMainPath() {
+// 	let CheckNode = {
+// 		x: START_NODE_X,
+// 		y: START_NODE_Y
+// 	};
+//
+// 	MainPath = [];
+//
+// 	while (CheckNode.x < GOAL_X) {
+// 		let CheckPheromoneEdge = [];
+//
+// 		for (let i = 0; i < edge.length; i++) {
+// 			if (nextEdge(CheckNode, edge[i]) == true) {
+// 				CheckPheromoneEdge.push(edge[i]);
+// 			}
+// 		}
+//
+// 		let max = 0;
+// 		let StrongEdge;
+// 		for (let i = 0; i < CheckPheromoneEdge.length; i++) {
+// 			if (CheckPheromoneEdge[i].pheromone > max) {
+// 				max = CheckPheromoneEdge[i].pheromone;
+// 				StrongEdge = CheckPheromoneEdge[i];
+// 			}
+// 		}
+// 		drawMainPath(StrongEdge.last_pos_x, StrongEdge.last_pos_y, StrongEdge.x, StrongEdge.y);
+// 		MainPath.push(StrongEdge);
+//
+// 		CheckNode.x = StrongEdge.x;
+// 		CheckNode.y = StrongEdge.y;
+// 	}
+// }
 
 var bifurcation = Math.floor((WIDTH - 2 * 30) / (AXIS + 1)); //分岐の軸のx座標
 
 var route_x = bifurcation;
 
-//開始地点からの経路の描画
-for (let z = 0; z < NODE_NUMBER; z++) {
-    let length = 0; //経路の長さ
-    drawPath(START_NODE_X, START_NODE_Y, route_x, route_y[0][z]);
-
-    length = calculatePath(START_NODE_X, START_NODE_Y, route_x, route_y[0][z]);
-
-    //エッジの保持
-    edge.push({
-        last_pos_x: START_NODE_X,
-        last_pos_y: START_NODE_Y,
-        x: route_x,
-        y: route_y[0][z],
-        length: length,
-        pheromone: 1
-    });
-}
-
 
 //軸は3つ
 //経路の描画
 function drawMap() {
+	//開始地点からの経路の描画
+	for (let z = 0; z < NODE_NUMBER; z++) {
+	    let length = 0; //経路の長さ
+	    drawPath(START_NODE_X, START_NODE_Y, route_x, route_y[0][z]);
+
+	    length = calculatePath(START_NODE_X, START_NODE_Y, route_x, route_y[0][z]);
+
+	    //エッジの保持
+	    edge.push({
+	        last_pos_x: START_NODE_X,
+	        last_pos_y: START_NODE_Y,
+	        x: route_x,
+	        y: route_y[0][z],
+	        length: length,
+	        pheromone: 1
+	    });
+	}
+
 	for (let y = 0; y < AXIS - 1; y++) { //軸の分だけ回す
 	    //ランダムの判断値
 	    let random_point = Math.floor(Math.random() * NODE_NUMBER);
@@ -235,25 +244,25 @@ function drawMap() {
 	    }
 	    route_x += bifurcation;
 	}
+
+	//経路からゴールへの描画
+	for (let z = 0; z < NODE_NUMBER; z++) {
+	    drawPath(route_x, route_y[AXIS - 1][z], GOAL_X, GOAL_Y);
+
+	    length = calculatePath(route_x, route_y[AXIS - 1][z], GOAL_X, GOAL_Y);
+	    //エッジの保持
+	    edge.push({
+	        last_pos_x: route_x,
+	        last_pos_y: route_y[AXIS - 1][z],
+	        x: GOAL_X,
+	        y: GOAL_Y,
+	        length: length,
+	        pheromone: 1
+	    });
+	}
 }
 drawMap();
 
-
-//経路からゴールへの描画
-for (let z = 0; z < NODE_NUMBER; z++) {
-    drawPath(route_x, route_y[AXIS - 1][z], GOAL_X, GOAL_Y);
-
-    length = calculatePath(route_x, route_y[AXIS - 1][z], GOAL_X, GOAL_Y);
-    //エッジの保持
-    edge.push({
-        last_pos_x: route_x,
-        last_pos_y: route_y[AXIS - 1][z],
-        x: GOAL_X,
-        y: GOAL_Y,
-        length: length,
-        pheromone: 1
-    });
-}
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -272,9 +281,11 @@ for (var i = 0; i < ANT_NUMBER; i++) {
 	ant[i].path.push(now_edge_num[i]);
 }
 
+
+
 var img = new Array();
 for (var i = 0; i < ANT_NUMBER; i++) {
-	let rd = Math.floor(Math.random() * 3);
+	let rd = Math.floor(Math.random() * 4);
     img[i] = new Image();
     img[i].src = "img/ant" + rd + ".png";
 }
@@ -286,6 +297,7 @@ function drawAnt() {
 		act[j] = document.getElementById(a[j]).getContext("2d");
 
 		act[j].clearRect(0, 0, 800, 500);
+
 	    for (let i = 0; i < ANT_NUMBER; i++) {
 	        act[j].drawImage(img[i], 0, 0, 400, 300, ant[i].x - 25, ant[i].y - 15, 50, 30);
 
