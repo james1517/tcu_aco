@@ -1,60 +1,52 @@
 body {
 	/*background-image: url("img/bg.png");*/
-		background-color: #FFF9C4;
+	background-color: #FFF9C4;
 }
 
 #path {
 	width: 800px;
 	height: 500px;
-	border: 1px solid #000000;
 	position: absolute;
+	background: url('./img/base3.png');
+	/* background-size: 100%; */
+	border: 1px solid #000000;
 }
 
 .ant {
 	width: 800px;
 	height: 500px;
 	position: absolute;
-	left: 0;
-}
-
-.canvas-area {
-	position: relative;
-		width: 800px;
-		height: 500px;
-    margin: 0 auto 40px;
-		border: 1px solid #000;
 }
 
 #windows {
 	position: relative;
+	display: inline-block;
 	margin: 0 auto;
 	width: 800px;
 	height: 500px;
 }
 
-.bkimg{
-	position: absolute;
-}
 /* リロードボタン */
-.btn-reset {
+.btn {
 	width: 90px;
 	height: 90px;
 	text-align: center;
 	line-height: 90px;
-	margin: 0px 25px 0px 200px;
-  display: inline-block;
-  text-decoration: none;
-  background: #795548;/*ボタン色*/
-  color: white;
-  border-bottom: solid 4px #27514d;
-  border-radius: 50%;
+	/* margin: 0 auto; */
+	display: inline-block;
+
+	text-decoration: none;
+	background: #795548;/*ボタン色*/
+	color: white;
+	border-bottom: solid 4px #27514d;
+	border-radius: 50%;
 	font-family: cursive;
 	overflow: hidden;
 }
-.btn-reset:hover{
+.btn:hover{
 	opacity: 0.6;
 }
-.btn-reset:active {
+.btn:active {
   /*ボタンを押したとき*/
 	width: 90px;
 	height: 90px;
@@ -70,7 +62,6 @@ input[type="range"]{
 	height: 3px;
 	width: 200px;
 	display: inline-block;
-	margin: 0px 0px 0px 100px;
 }
 
 input[type="range"]::-webkit-slider-thumb{
@@ -83,20 +74,37 @@ input[type="range"]::-webkit-slider-thumb{
 	}
 
 /* 左 */
-	.mmm{
-		display: inline-block;
-		margin: 0px 0px 0px 200px;
-	}
+.setting{
+	display: inline-block;
+	position: relative;
+	margin: 0 auto;
+	left: 10px;
+	width: 20%;
+	float: left;
+}
 /* ラベル */
-	.text{
-		color: #795548;
-	}
+.text{
+	padding-top: 30px;
+	margin: 0 auto;
+	color: #795548;
+}
 /* 結果を表示するボックス */
-	.space{
-		color: white;
-		background-color: #795548;
-		width: 50px;
-		height: 35px;
-		margin: auto;
-		border-radius: 10%;
-	}
+.space{
+	color: white;
+	text-align: center;
+	padding-top: 10px;
+	background-color: #795548;
+	width: 50px;
+	height: 35px;
+	border-radius: 10%;
+}
+
+.button {
+	display: inline-block;
+	margin: 0 auto;
+	left: 50px;
+	top: 30px;
+	position: relative;
+	width: 20%;
+	float: right;
+}

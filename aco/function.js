@@ -1,23 +1,58 @@
 const WIDTH = 800;
 const HEIGHT = 500;
-const NODE_NUMBER = 3; //ノードの数
-const ANT_NUMBER = 10;//アリの数
+
+if (sessionStorage.getItem("SavedAntNumber") == null) {
+	var ANT_NUMBER = 10;//アリの数
+}
+else {
+	ANT_NUMBER = Number(sessionStorage.getItem("SavedAntNumber"));
+}
+document.getElementById("AntNumberText").innerHTML = ANT_NUMBER;
+
+if (sessionStorage.getItem("SavedNodeNumber") == null) {
+	var NODE_NUMBER = 3; //ノードの数
+}
+else {
+	NODE_NUMBER = Number(sessionStorage.getItem("SavedNodeNumber"));
+}
+document.getElementById("NodeNumberText").innerHTML = NODE_NUMBER;
+
 const AXIS = 4; //軸の数
 const START_NODE_X = 30; //アリの巣のx座標
 const START_NODE_Y = Math.floor(Math.random() * HEIGHT); //アリの巣のy座標
 const RANDOM_MIN_Y = 30; //y座標のランダム下限範囲
-const RANDOM_MAX_Y = HEIGHT - 120; //y座標のランダム上限範囲
+const RANDOM_MAX_Y = HEIGHT - 50 * NODE_NUMBER; //y座標のランダム上限範囲
 const GOAL_Y = Math.floor(Math.random() * HEIGHT); //エサのy座標
 const GOAL_X = WIDTH - 30;
 // const RAND_01 = Math.random(); //ルーレット選択に使用する
 const PHERO_Q = 10; //アリの一回の分泌量
 const EVA_R = 0.05;//フェロモンの蒸発率
+const PHERO_R = 0.8;//ヒューリスティック情報を考慮する割合
 
+var a = ["ant0", "ant1", "ant2", "ant3", "ant4", "ant5", "ant6", "ant7", "ant8", "ant9",
+"ant10", "ant11", "ant12", "ant13", "ant14", "ant15", "ant16", "ant17", "ant18", "ant19"];
+var act = new Array();
 
+var p = document.getElementById("path"); //IDの取得
+var pct = p.getContext("2d"); //二軸（x,y）指定
+
+var AntNumberSlider = document.getElementById("AntNumber");
+// Update the current slider value (each time you drag the slider handle)
+AntNumberSlider.oninput = function() {
+	document.getElementById("AntNumberText").innerHTML = this.value;
+}
+AntNumberSlider.value = ANT_NUMBER.toString();
+
+var NodeNumberSlider = document.getElementById("NodeNumber");
+// Update the current slider value (each time you drag the slider handle)
+NodeNumberSlider.oninput = function() {
+	document.getElementById("NodeNumberText").innerHTML = this.value;
+}
+NodeNumberSlider.value = NODE_NUMBER.toString();
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //アリの情報
 var ant = [];
-for (let i = 0; i < ANT_NUMBER; i++) {
+for (let i = 0; i < 20; i++) {
 	ant.push(
 		{
 			x: START_NODE_X,
@@ -26,6 +61,39 @@ for (let i = 0; i < ANT_NUMBER; i++) {
             total_dis: 0
 		}
 	);
+}
+
+function reset() {
+	location.reload();
+	for (let i = 0; i < ANT_NUMBER; i++) {
+		act[i] = document.getElementById(a[i]).getContext("2d");
+		act[i].clearRect(0, 0, 800, 500);
+	}
+
+
+	sessionStorage.setItem("SavedAntNumber", AntNumberSlider.value.toString());
+	sessionStorage.setItem("SavedNodeNumber", NodeNumberSlider.value.toString());
+
+	for (let i = 0; i < ANT_NUMBER; i++) {
+		ant[i].x = START_NODE_X;
+		ant[i].y = START_NODE_Y;
+		ant[i].total_dis = 0;
+		ant[i].path = [];
+
+		now_edge_num[i] = StartChoicePath(i);
+	}
+}
+
+var bg_num = 0;
+function change_bg() {
+	var change_bg = document.getElementById("path");
+	change_bg.style.background = "url(./img/base"+ bg_num + ".png)";
+	if (bg_num >= 3) {
+		bg_num = 0;
+	}
+	else {
+		bg_num++;
+	}
 }
 
 //各エッジの座標の保持,フェロモン情報
@@ -56,8 +124,6 @@ function calculatePath(x1, y1, x2, y2) {
 
 //経路の描画
 function drawPath(x1, y1, x2, y2) {
-    var p = document.getElementById("path"); //IDの取得
-    var pct = p.getContext("2d"); //二軸（x,y）指定
 
     pct.moveTo(x1, y1); //始点設定
     pct.lineTo(x2, y2); //終点設定
@@ -89,42 +155,44 @@ for (let z = 0; z < NODE_NUMBER; z++) {
 
 //軸は3つ
 //経路の描画
+function drawMap() {
+	for (let y = 0; y < AXIS - 1; y++) { //軸の分だけ回す
+	    //ランダムの判断値
+	    let random_point = Math.floor(Math.random() * NODE_NUMBER);
+	    for (let z = 0; z < NODE_NUMBER; z++) { //座標の分だけ回す
+	        drawPath(route_x, route_y[y][z], route_x + bifurcation, route_y[y + 1][z]);
 
-for (let y = 0; y < AXIS - 1; y++) { //軸の分だけ回す
-    //ランダムの判断値
-    let random_point = Math.floor(Math.random() * NODE_NUMBER);
-    for (let z = 0; z < NODE_NUMBER; z++) { //座標の分だけ回す
-        drawPath(route_x, route_y[y][z], route_x + bifurcation, route_y[y + 1][z]);
+	        length = calculatePath(bifurcation, route_y[y][z], route_x + bifurcation, route_y[y + 1][z]);
+	        //エッジの保持
+	        edge.push({
+	            last_pos_x: route_x,
+	            last_pos_y: route_y[y][z],
+	            x: route_x + bifurcation,
+	            y: route_y[y + 1][z],
+	            length: length,
+	            pheromone: 1
+	        });
 
-        length = calculatePath(bifurcation, route_y[y][z], route_x + bifurcation, route_y[y + 1][z]);
-        //エッジの保持
-        edge.push({
-            last_pos_x: route_x,
-            last_pos_y: route_y[y][z],
-            x: route_x + bifurcation,
-            y: route_y[y + 1][z],
-            length: length,
-            pheromone: 1
-        });
+	        //分岐の生成
+	        if (random_point != z) {
+	            drawPath(route_x, route_y[y][z], route_x + bifurcation, route_y[y + 1][random_point]);
 
-        //分岐の生成
-        if (random_point != z) {
-            drawPath(route_x, route_y[y][z], route_x + bifurcation, route_y[y + 1][random_point]);
-
-            length = calculatePath(route_x, route_y[y][z], route_x + bifurcation, route_y[y + 1][random_point]);
-            //エッジの保持
-            edge.push({
-                last_pos_x: route_x,
-                last_pos_y: route_y[y][z],
-                x: route_x + bifurcation,
-                y: route_y[y + 1][random_point],
-                length: length,
-                pheromone: 1
-            });
-        }
-    }
-    route_x += bifurcation;
+	            length = calculatePath(route_x, route_y[y][z], route_x + bifurcation, route_y[y + 1][random_point]);
+	            //エッジの保持
+	            edge.push({
+	                last_pos_x: route_x,
+	                last_pos_y: route_y[y][z],
+	                x: route_x + bifurcation,
+	                y: route_y[y + 1][random_point],
+	                length: length,
+	                pheromone: 1
+	            });
+	        }
+	    }
+	    route_x += bifurcation;
+	}
 }
+drawMap();
 
 
 //経路からゴールへの描画
@@ -161,18 +229,18 @@ for (var i = 0; i < ANT_NUMBER; i++) {
 
 var img = new Array();
 for (var i = 0; i < ANT_NUMBER; i++) {
+	let rd = Math.floor(Math.random() * 3);
     img[i] = new Image();
-    img[i].src = "ant.png";
+    img[i].src = "img/ant" + rd + ".png";
 }
 
+
+
 function drawAnt() {
-	var a = ["ant0", "ant1", "ant2", "ant3", "ant4", "ant5", "ant6", "ant7", "ant8", "ant9"];
-	var act = new Array();
-	var b = new Array();
+
 
 	for (let j = 0; j < ANT_NUMBER; j++) {
-		b[j] = document.getElementById(a[j]);
-		act[j] = b[j].getContext("2d");
+		act[j] = document.getElementById(a[j]).getContext("2d");
 
 		act[j].clearRect(0, 0, 800, 500);
 	    for (let i = 0; i < ANT_NUMBER; i++) {
@@ -198,22 +266,20 @@ function drawAnt() {
 		}
 	    if (end_of_circle == true) {
 	        //初期化
-	        //for(let i = 0; i < ANT_NUMBER; i++){
 	        for (let i = 0; i < ANT_NUMBER; i++) {
 	            ant[i].x = START_NODE_X;
 	            ant[i].y = START_NODE_Y;
 	            ant[i].total_dis = 0;
-	        }
+				ant[i].path = [];
 
-	        for (var i = 0; i < ANT_NUMBER; i++) {
-	            now_edge_num[i] = StartChoicePath(i);
+				now_edge_num[i] = StartChoicePath(i);
 	        }
 	    }
 	}
 
 }
 
-setInterval(drawAnt, 50);
+setInterval(drawAnt, ANT_NUMBER * 5);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -227,40 +293,42 @@ function nextEdge(edge1, edge2) {
 	}
 }
 
+
+
+
 //ルーレット選択
 function rouletteChoice(choice_edge) {
-    let denom = 0;
-
+	let denom = 0;
     //適応度に変換
     for (let i = 0; i < choice_edge.length; i++) {
-        choice_edge[i].pheromone = 1 / choice_edge[i].pheromone;
+        //choice_edge[i].pheromone = 1 / choice_edge[i].pheromone;
         denom += choice_edge[i].pheromone;
     }
-
     //ソート
     for (let i = 0; i < choice_edge.length; i++) {
-       for (let j = choice_edge.length - 1; j > i; j--) {
-           if (choice_edge[j].pheromone < choice_edge[j - 1].pheromone) {
-               let swap = choice_edge[j].pheromone;
-               choice_edge[j].pheromone = choice_edge[j - 1].pheromone;
-               choice_edge[j - 1].pheromone = swap;
-           }
-       }
-   }
-
+        for (let j = choice_edge.length - 1; j > i; j--) {
+            if (choice_edge[j].pheromone > choice_edge[j - 1].pheromone) {
+                let swap = choice_edge[j].pheromone;
+                choice_edge[j].pheromone = choice_edge[j - 1].pheromone;
+                choice_edge[j - 1].pheromone = swap;
+            }
+        }
+    }
     //ルーレット選択
     let rank;
     let prob;
-    let r =  Math.random();
-
-    for (rank = 1; rank < choice_edge.length; rank++) {
-        prob = choice_edge[rank - 1].pheromone / denom;
-        if (r <= prob) {
-            break;
+    let r = Math.random();
+    if ((denom != 0) && (r <= PHERO_R)) {
+        for (rank = 1; rank < choice_edge.length; rank++) {
+            prob = choice_edge[rank - 1].pheromone / denom;
+            if (r <= prob) {
+                break;
+            }
+            r -= prob;
         }
-        r -= prob;
+    }else{
+        rank = Math.floor(Math.random() * choice_edge.length) + 1;
     }
-
     return choice_edge[rank - 1].edge_num;
 }
 
@@ -319,6 +387,11 @@ function StartChoicePath(ant_num) {
 //フェロモンの分泌
 function putpheromone(ant_num) {
     let i;
+
+	for(let i = 0; i < ant[ant_num].path.length; i++){
+        ant[ant_num].total_dis += calculatePath(edge[ant[ant_num].path[i]].last_pos_x ,edge[ant[ant_num].path[i]].last_pos_y ,edge[ant[ant_num].path[i]].x ,edge[ant[ant_num].path[i]].y);
+    }
+
     let p = PHERO_Q / ant[ant_num].total_dis;
 
     for(let z = 0; z < ant[ant_num].path.length; z++){
