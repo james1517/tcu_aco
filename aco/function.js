@@ -135,7 +135,8 @@ function drawPath(x1, y1, x2, y2) {
 
     pct.moveTo(x1, y1); //始点設定
     pct.lineTo(x2, y2); //終点設定
-	pct.strokeStyle = "black";
+	pct.lineWidth = 3;
+	pct.strokeStyle = "blue";
     pct.stroke(); //経路の形の指定，描画
 }
 
