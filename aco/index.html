@@ -8,19 +8,22 @@
 </head>
 
 <body>
+	<!-- 左側 -->
 	<div class="setting">
+		<!-- アリの数の情報 -->
 		<p class="text">アリの数</p>
 		<p id="AntNumberText" class="space"></p>
-		<!-- 速度バー　スタイル設定のため仮置き -->
 		<input id="AntNumber" type="range" class="slider" min="1" max="20" value="10">
 
 		<p></p>
 
+		<!-- 経路の難易度の情報 -->
 		<p class="text">経路の難易度</p>
 		<p id="NodeNumberText" class="space"></p>
 		<input id="NodeNumber" type="range" class="slider" min="1" max="6" value="3">
 	</div>
 
+	<!-- アリと経路の描画 -->
 	<div id="windows">
 		<canvas id="path" width="800" height="500"></canvas>
 	    <canvas id="ant0" class="ant" width="800" height="500"></canvas>
@@ -45,17 +48,26 @@
 		<canvas id="ant19" class="ant" width="800" height="500"></canvas>
 	</div>
 
+	<!-- 右側 -->
 	<div class="button">
 		<!-- リセットボタン -->
-		<p><a href="#" onclick="reset()" class="btn">経路再生成</a></p>
+		<p><a href="#" onclick="reset()" class="btn">再生成</a></p>
 
 		<!-- 背景を変えるボタン -->
 		<p><a href="#" onclick="change_bg()" class="btn">背景変更</a></p>
 	</div>
 
-	<script src="function.js"></script>
+	<!-- 下部分の説明 -->
+	<div id="explanation">
+		アリは社会性昆虫と呼ばれる昆虫の一種である．コロニーを形成し，各々が女王アリ，働きアリ，兵隊アリなどの異なる役割を担って生活をする．
+働きアリは餌を見つけた際にフェロモンを分泌し，フェロモンが付着した道を通る傾向がある．フェロモンは揮発性のため，時間の経過によって蒸発する．よって，餌までの経路が短いほど，フェロモンが残ることになる．
+この習性を利用し，本アルゴリズムでは最適化をおこなっている．
+	</div>
+
+	<script src="button_function.js"></script>
+	<script src="draw_canvas.js"></script>
+	<script src="information.js"></script>
 	<footer>
 	</footer>
 </body>
-
 </html>
